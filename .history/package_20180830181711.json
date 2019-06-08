@@ -1,0 +1,21 @@
+{
+  "name": "react-interview",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "4.0.1",
+    "react-scripts": "1.1.5",
+    "swapi-json-server": "git+https://github.com/joltup/swapi-json-server.git"
+  },
+  "dependencies": {
+    "react": "16.4.2",
+    "react-dom": "16.4.2",
+    "react-paginate": "5.2.4"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/concurrently \"cd ./node_modules/swapi-json-server && node app.js\" \"react-scripts start\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
