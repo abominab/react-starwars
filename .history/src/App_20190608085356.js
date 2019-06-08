@@ -14,7 +14,7 @@ const App = () => {
     fetch(`http://localhost:3008/people`)
       .then(res => (res.ok ? res.json() : Promise.reject(res.statusText)))
       .then(json => {
-        // console.log(`people:`, json);
+        // console.log(1, json);
         if (current) {
           setPeople(json);
         }
@@ -24,7 +24,7 @@ const App = () => {
     fetch(`http://localhost:3008/planets`)
       .then(res => (res.ok ? res.json() : Promise.reject(res.statusText)))
       .then(json => {
-        // console.log(`planets:`, json);
+        // console.log(2, json);
         if (current) {
           setPlanets(json);
         }
@@ -45,13 +45,11 @@ const App = () => {
       </div>
       <SearchBar />
       {people.map(({ birth_year, homeworld, id, image, name }) => {
-        const homePlanet =
-          planets.find(planet => planet.id === homeworld) || {};
-
+        console.log(1, planets.find(planet => planet.id === homeworld));
         return (
           <Card
             birthday={birth_year}
-            homePlanet={homePlanet.name}
+            homePlanet={planets.find(planet => planet.id === homeworld).name}
             image={image}
             key={id}
             name={name}

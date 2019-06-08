@@ -7,33 +7,24 @@ import wars from "./images/wars.svg";
 
 const App = () => {
   const [people, setPeople] = useState([]);
-  const [planets, setPlanets] = useState([]);
+  const [planets, setPlantes] = useState([]);
 
   useEffect(() => {
-    let current = true;
     fetch(`http://localhost:3008/people`)
       .then(res => (res.ok ? res.json() : Promise.reject(res.statusText)))
       .then(json => {
-        // console.log(`people:`, json);
-        if (current) {
-          setPeople(json);
-        }
+        console.log(1, json);
+        setPeople(json);
       })
       .catch(err => console.error(err));
 
     fetch(`http://localhost:3008/planets`)
       .then(res => (res.ok ? res.json() : Promise.reject(res.statusText)))
       .then(json => {
-        // console.log(`planets:`, json);
-        if (current) {
-          setPlanets(json);
-        }
+        console.log(2, json);
+        setPlantes(json);
       })
       .catch(err => console.error(err));
-
-    return () => {
-      current = false;
-    };
   }, []);
 
   return (
@@ -44,20 +35,15 @@ const App = () => {
         <img src={wars} alt="wars-logo" />
       </div>
       <SearchBar />
-      {people.map(({ birth_year, homeworld, id, image, name }) => {
-        const homePlanet =
-          planets.find(planet => planet.id === homeworld) || {};
-
-        return (
-          <Card
-            birthday={birth_year}
-            homePlanet={homePlanet.name}
-            image={image}
-            key={id}
-            name={name}
-          />
-        );
-      })}
+      {people.map(({ birth_year, homeworld, id, image, name }) => (
+        <Card
+          birthday={birth_year}
+          homePlanet={homeworld}
+          image={image}
+          key={id}
+          name={name}
+        />
+      ))}
     </div>
   );
 };

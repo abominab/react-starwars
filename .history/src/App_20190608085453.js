@@ -45,13 +45,12 @@ const App = () => {
       </div>
       <SearchBar />
       {people.map(({ birth_year, homeworld, id, image, name }) => {
-        const homePlanet =
-          planets.find(planet => planet.id === homeworld) || {};
+        console.log(homeworld, planets.find(planet => planet.id === homeworld));
 
         return (
           <Card
             birthday={birth_year}
-            homePlanet={homePlanet.name}
+            homePlanet={planets.find(planet => planet.id === homeworld).name}
             image={image}
             key={id}
             name={name}

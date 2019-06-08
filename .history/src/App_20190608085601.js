@@ -44,20 +44,18 @@ const App = () => {
         <img src={wars} alt="wars-logo" />
       </div>
       <SearchBar />
-      {people.map(({ birth_year, homeworld, id, image, name }) => {
-        const homePlanet =
-          planets.find(planet => planet.id === homeworld) || {};
-
-        return (
-          <Card
-            birthday={birth_year}
-            homePlanet={homePlanet.name}
-            image={image}
-            key={id}
-            name={name}
-          />
-        );
-      })}
+      {people.map(({ birth_year, homeworld, id, image, name }) => (
+        <Card
+          birthday={birth_year}
+          homePlanet={
+            planets.length &&
+            planets.find(planet => planet.id === homeworld).name
+          }
+          image={image}
+          key={id}
+          name={name}
+        />
+      ))}
     </div>
   );
 };

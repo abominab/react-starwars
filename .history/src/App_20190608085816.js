@@ -45,9 +45,7 @@ const App = () => {
       </div>
       <SearchBar />
       {people.map(({ birth_year, homeworld, id, image, name }) => {
-        const homePlanet =
-          planets.find(planet => planet.id === homeworld) || {};
-
+        let homePlanet = planets.find(planet => planet.id === homeworld) || {};
         return (
           <Card
             birthday={birth_year}
