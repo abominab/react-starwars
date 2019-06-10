@@ -1,10 +1,14 @@
 import React from "react";
 import "./SearchBar.css";
 
-const SearchBar = () => {
+const SearchBar = ({ query, onChange }) => {
   return (
     <div className="search-bar">
-      <input placeholder="Search Your Destiny" />
+      <input
+        placeholder="Search Your Destiny"
+        value={query}
+        onChange={onChange}
+      />
     </div>
   );
 };
