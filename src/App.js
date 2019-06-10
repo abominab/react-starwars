@@ -3,9 +3,9 @@ import "./App.css";
 import Card from "./Card.js";
 import SearchBar from "./SearchBar.js";
 import ReactPaginate from "react-paginate";
+import FavoriteCounter from "./FavoriteCounter";
 import star from "./images/star.svg";
 import wars from "./images/wars.svg";
-import PlanetSelect from "./PlanetSelect";
 
 const AppContext = createContext();
 
@@ -16,6 +16,12 @@ const App = () => {
   const [state, dispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
+        case "FAVORITE_COUNT_CHANGED":
+          return {
+            ...state,
+            favoriteCount: action.count
+          };
+
         case "PAGE_INDEX_CHANGE":
           return {
             ...state,
@@ -51,10 +57,11 @@ const App = () => {
           };
 
         default:
-          break;
+          return state;
       }
     },
     {
+      favoriteCount: 0,
       needUpdate: false,
       page: 0,
       pageCount: 9,
@@ -130,50 +137,63 @@ const App = () => {
 
   return (
     <div className="content">
-      <AppContext.Provider value={{ planets: state.planets }}>
-        <div className="logo">
-          <img src={star} alt="star-logo" />
-          <span className="interview-text">The Interview</span>
-          <img src={wars} alt="wars-logo" />
-        </div>
+      {/* <AppContext.Provider value={{ planets: state.planets }}> */}
+      <div className="logo">
+        <img src={star} alt="star-logo" />
+        <span className="interview-text">The Interview</span>
+        <img src={wars} alt="wars-logo" />
+      </div>
 
-        <SearchBar
-          query={state.query}
-          onChange={e =>
-            dispatch({ type: "QUERY_CHANGE", query: e.target.value })
-          }
-        />
+      <SearchBar
+        query={state.query}
+        onChange={e =>
+          dispatch({ type: "QUERY_CHANGE", query: e.target.value })
+        }
+      />
 
-        <ReactPaginate
-          breakLabel={"..."}
-          containerClassName={"pagination"}
-          marginPagesDisplayed={2}
-          nextLabel={"Next"}
-          onPageChange={({ selected }) => {
-            dispatch({ type: "PAGE_INDEX_CHANGE", page: selected + 1 });
-          }}
-          pageCount={state.pageCount}
-          pageRangeDisplayed={state.pageCount}
-          previousLabel={"Previous"}
-        />
+      <FavoriteCounter count={state.favoriteCount} />
 
-        {state.people &&
-          state.people.map(({ birth_year, homeworld, id, image, name }) => {
-            const homePlanet =
-              state.planets.find(planet => planet.id === homeworld) || {};
+      <ReactPaginate
+        breakLabel={"..."}
+        containerClassName={"pagination"}
+        marginPagesDisplayed={2}
+        nextLabel={"Next"}
+        onPageChange={({ selected }) => {
+          dispatch({ type: "PAGE_INDEX_CHANGE", page: selected + 1 });
+        }}
+        pageCount={state.pageCount}
+        pageRangeDisplayed={state.pageCount}
+        previousLabel={"Previous"}
+      />
 
-            return (
-              <Card
-                birthday={birth_year}
-                homePlanet={homePlanet.name}
-                id={id}
-                image={image}
-                key={id}
-                name={name}
-              />
-            );
-          })}
-      </AppContext.Provider>
+      {state.people &&
+        state.people.map(({ birth_year, homeworld, id, image, name }) => {
+          const homePlanet =
+            state.planets.find(planet => planet.id === homeworld) || {};
+          // determine if id is in peoplefavorites array
+
+          return (
+            <Card
+              birthday={birth_year}
+              homePlanet={homePlanet.name}
+              id={id}
+              image={image}
+              isFavorite={false}
+              key={id}
+              name={name}
+              // I realize that this makes the child component need to know the workings of how onFavorite needs to work but for this small app I'm ok w/ that.
+              onFavoriteToggle={favorited =>
+                dispatch({
+                  type: "FAVORITE_COUNT_CHANGED",
+                  count: favorited
+                    ? state.favoriteCount + 1
+                    : state.favoriteCount - 1
+                })
+              }
+            />
+          );
+        })}
+      {/* </AppContext.Provider> */}
     </div>
   );
 };

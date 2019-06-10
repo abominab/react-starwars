@@ -2,13 +2,31 @@ import React, { useState } from "react";
 import "./Card.css";
 import PlanetSelect from "./PlanetSelect";
 
-const Card = ({ birthday, homePlanet, id, image, name }) => {
+const Card = ({
+  birthday,
+  homePlanet,
+  id,
+  image,
+  isFavorite,
+  name,
+  onFavoriteToggle
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [cardBday, setCardBday] = useState(birthday);
   const [cardName, setCardName] = useState(name);
 
-  const handleSubmit = args => {
-    console.log(args);
+  const handleFavorite = () => {
+    onFavoriteToggle(!isFavorite);
+    // fetch(`http://localhost:3008/peoplefavorites`, {
+    //   body: JSON.stringify({id}),
+    //   method: `POST`
+    // })
+    //   .then(res => (res.ok ? res.json() : Promise.reject(res.statusText)))
+    //   .then(favorites => {})
+    //   .catch(err => console.error(err));
+  };
+
+  const handleSubmit = () => {
     fetch(`http://localhost:3008/people/${id}`, {
       body: JSON.stringify({ name: cardName, birth_year: cardBday }),
       headers: { "content-type": `application/json` },
@@ -71,6 +89,7 @@ const Card = ({ birthday, homePlanet, id, image, name }) => {
           Edit
         </p>
         {editMode && <p onClick={handleSubmit}>Save</p>}
+        <p onClick={handleFavorite}>Favorite</p>
       </div>
     </div>
   );
