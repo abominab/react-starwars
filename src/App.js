@@ -1,10 +1,13 @@
-import React, { useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import "./App.css";
 import Card from "./Card.js";
 import SearchBar from "./SearchBar.js";
 import ReactPaginate from "react-paginate";
 import star from "./images/star.svg";
 import wars from "./images/wars.svg";
+import PlanetSelect from "./PlanetSelect";
+
+const AppContext = createContext();
 
 const App = () => {
   // const [people, setPeople] = useState([]);
@@ -127,49 +130,56 @@ const App = () => {
 
   return (
     <div className="content">
-      <div className="logo">
-        <img src={star} alt="star-logo" />
-        <span className="interview-text">The Interview</span>
-        <img src={wars} alt="wars-logo" />
-      </div>
+      <AppContext.Provider value={{ planets: state.planets }}>
+        <div className="logo">
+          <img src={star} alt="star-logo" />
+          <span className="interview-text">The Interview</span>
+          <img src={wars} alt="wars-logo" />
+        </div>
 
-      <SearchBar
-        query={state.query}
-        onChange={e =>
-          dispatch({ type: "QUERY_CHANGE", query: e.target.value })
-        }
-      />
+        <SearchBar
+          query={state.query}
+          onChange={e =>
+            dispatch({ type: "QUERY_CHANGE", query: e.target.value })
+          }
+        />
 
-      <ReactPaginate
-        breakLabel={"..."}
-        containerClassName={"pagination"}
-        marginPagesDisplayed={2}
-        nextLabel={"Next"}
-        onPageChange={({ selected }) => {
-          dispatch({ type: "PAGE_INDEX_CHANGE", page: selected + 1 });
-        }}
-        pageCount={state.pageCount}
-        pageRangeDisplayed={state.pageCount}
-        previousLabel={"Previous"}
-      />
+        <ReactPaginate
+          breakLabel={"..."}
+          containerClassName={"pagination"}
+          marginPagesDisplayed={2}
+          nextLabel={"Next"}
+          onPageChange={({ selected }) => {
+            dispatch({ type: "PAGE_INDEX_CHANGE", page: selected + 1 });
+          }}
+          pageCount={state.pageCount}
+          pageRangeDisplayed={state.pageCount}
+          previousLabel={"Previous"}
+        />
 
-      {state.people &&
-        state.people.map(({ birth_year, homeworld, id, image, name }) => {
-          const homePlanet =
-            state.planets.find(planet => planet.id === homeworld) || {};
+        {state.people &&
+          state.people.map(({ birth_year, homeworld, id, image, name }) => {
+            const homePlanet =
+              state.planets.find(planet => planet.id === homeworld) || {};
 
-          return (
-            <Card
-              birthday={birth_year}
-              homePlanet={homePlanet.name}
-              image={image}
-              key={id}
-              name={name}
-            />
-          );
-        })}
+            return (
+              <Card
+                birthday={birth_year}
+                homePlanet={homePlanet.name}
+                id={id}
+                image={image}
+                key={id}
+                name={name}
+              />
+            );
+          })}
+      </AppContext.Provider>
     </div>
   );
 };
 
 export default App;
+
+export function useAppContext() {
+  return useContext(AppContext);
+}
