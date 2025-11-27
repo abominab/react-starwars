@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "swapi-json-server": "git+https://github.com/joltup/swapi-json-server.git"
   },
   "scripts": {
